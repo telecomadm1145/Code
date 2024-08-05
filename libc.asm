@@ -9,23 +9,26 @@
         .type    memzero_n,@function
         .globl memset_n
         .type memset_n,@function
+        .globl DebugOutputString
+        .type DebugOutputString,@function
+    DebugOutputString:
+        lea [er0]
+    loop7:
+        l r0,r2:[ea+]
+        st r0,6:0x0721
+        bne loop7
+        rt
+
     strcpy_nn:
-        PUSH XR8
-        PUSH BP
-        MOV ER8, ER0
-        MOV ER10, ER2
-        MOV BP, ER0
-    .l_00A:
-        L R0, [ER10]
-        ST R0, [BP]
-        ADD ER10, #1
-        ADD BP, #1
-        MOV R0, R0
-        BNE .l_00A
-        MOV ER0, ER8
-        POP BP
-        POP XR8
-        RT
+        lea [er0]
+    .loop9:
+        l r0,[ea+]
+        beq .exit9
+        st r0,[er2]
+        add er2,1
+        bal .loop9
+    .exit9:
+        rt
 
     memcpy_nn:
         push er4

@@ -4,13 +4,13 @@ extern "C" void render_copy();
 
 int main()
 {
+	char test[30] = "Count:";
 	reset_sfrs();
-	ScreenSelect = 4;
+	Timer0Interval = 65535;
+	ushort n = itoa_n(atoi_n<long>( (char __near *)"07210721"), (char __near *)(test + 6));
+	*(test + n + 6) = '\n';
+	*(test + n + 6 + 1) = 0;
+	DebugOutputString(test);
 	while (1)
-	{
-		memcpy_nn((void __near*)0xf800,(void __near*)0,0x800);
-		delay(300);
-		memzero_n((void __near*)0xf800,0x800);
-		delay(300);
-	}
+		delay(1000);
 }

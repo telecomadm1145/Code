@@ -2,6 +2,8 @@
 
 SET PATH=C:\LAPIS\LEXIDE\Bin;C:\LAPIS\LEXIDE\BuildTools\Ver.20231124\Bin;C:\LAPIS\LEXIDE\Utilities\Bin;%PATH%
 
+del classwiz_bsp.o libc.o program.elf program.hex program.map program.bin startup.o test.o
+
 clang-u16.exe -c test.cpp -O3 -v
 clang-u16.exe -c test.cpp -O3 -S
 clang-u16.exe -c classwiz_bsp.cpp -O3 -v

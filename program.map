@@ -70,7 +70,7 @@
       76       76        2     1         . = 0x78
       78       78        2     1         . = 0x7a
 80009000 80009000        0     1 .data
-     100      100      44c     4 .rom
+     100      100      534     4 .rom
      100      100        0     1         __rodata0_end = ( . )
      100      100        0     1         
      100      100        8     1         startup.o:(.text0.start_up)
@@ -85,59 +85,63 @@
      10a      10a        a     1         startup.o:(.rodata)
      10a      10a        0     1                 _$$init_info
      112      112        0     1                 _$$init_info_end
-     114      114        0     4         startup.o:(.text)
-     114      114       82     4         libc.o:(.text)
-     114      114        0     1                 strcpy_nn
-     11e      11e        0     1                 .l_00A
-     132      132        0     1                 memcpy_nn
-     13c      13c        0     1                 .loop5
-     14a      14a        0     1                 memzero_n
-     150      150        0     1                 .loop
-     15a      15a        0     1                 memzero_w_n
-     168      168        0     1                 .pass0
-     170      170        0     1                 .pass1
-     172      172        0     1                 .loop3
-     17e      17e        0     1                 .exit
-     182      182        0     1                 memset_n
-     18c      18c        0     1                 .loop2
-     198      198       3c     4         test.o:(.text)
-     198      198       3c     1                 main
-     1d4      1d4      140     4         classwiz_bsp.o:(.text)
-     1d4      1d4        8     1                 a
-     1dc      1dc       1e     1                 reset_timer()
-     1fc      1fc       4a     1                 delay(unsigned short)
-     248      248       cc     1                 reset_sfrs()
-     314      314      228     4         line_print.o:(.text)
-     314      314        0     1                 render_copy
-     32e      32e        0     1                 .l_018
-     332      332        0     1                 .l_01c
-     342      342        0     1                 .l_02c
-     346      346        0     1                 .l_030
-     350      350        0     1                 .l_038
-     352      352        0     1                 .l_03a
-     39c      39c        0     1                 .l_07a
-     39e      39e        0     1                 f_27432
-     3c8      3c8        0     1                 lookup_bitmap
-     3ec      3ec        0     1                 .l_022
-     410      410        0     1                 .l_042
-     41e      41e        0     1                 .l_04e
-     45e      45e        0     1                 .l_084
-     46e      46e        0     1                 .l_090
-     476      476        0     1                 .l_098
-     49e      49e        0     1                 .l_0ba
-     4a6      4a6        0     1                 .l_0c2
-     4b2      4b2        0     1                 .l_0ca
-     4da      4da        0     1                 .l_0e6
-     4e8      4e8        0     1                 .l_0f2
-     4f8      4f8        0     1                 .l_0fe
-     502      502        0     1                 .l_106
-     506      506        0     1                 .f_28890
-     51c      51c        0     1                 .al_012
-     520      520        0     1                 .al_016
-     530      530        0     1                 .al_024
-     53c      53c       10     4         C:/LAPIS/LEXIDE/BuildTools/Ver.20231124/Lib/U16/longu8.a(PUSHPOPU8LW.o):(.text)
-     53c      53c        0     1                 __regpushu8lw
-     544      544        0     1                 __regpopu8lw
+     114      114       1e     1         test.o:(.rodata)
+     134      134        0     4         startup.o:(.text)
+     134      134       82     4         libc.o:(.text)
+     134      134        0     1                 DebugOutputString
+     136      136        0     1                 loop7
+     144      144        0     1                 strcpy_nn
+     146      146        0     1                 .loop9
+     150      150        0     1                 .exit9
+     152      152        0     1                 memcpy_nn
+     15c      15c        0     1                 .loop5
+     16a      16a        0     1                 memzero_n
+     170      170        0     1                 .loop
+     17a      17a        0     1                 memzero_w_n
+     188      188        0     1                 .pass0
+     190      190        0     1                 .pass1
+     192      192        0     1                 .loop3
+     19e      19e        0     1                 .exit
+     1a2      1a2        0     1                 memset_n
+     1ac      1ac        0     1                 .loop2
+     1b8      1b8      102     4         test.o:(.text)
+     1b8      1b8      102     1                 main
+     2bc      2bc      140     4         classwiz_bsp.o:(.text)
+     2bc      2bc        8     1                 a
+     2c4      2c4       1e     1                 reset_timer()
+     2e4      2e4       4a     1                 delay(unsigned short)
+     330      330       cc     1                 reset_sfrs()
+     3fc      3fc      228     4         line_print.o:(.text)
+     3fc      3fc        0     1                 render_copy
+     416      416        0     1                 .l_018
+     41a      41a        0     1                 .l_01c
+     42a      42a        0     1                 .l_02c
+     42e      42e        0     1                 .l_030
+     438      438        0     1                 .l_038
+     43a      43a        0     1                 .l_03a
+     484      484        0     1                 .l_07a
+     486      486        0     1                 f_27432
+     4b0      4b0        0     1                 lookup_bitmap
+     4d4      4d4        0     1                 .l_022
+     4f8      4f8        0     1                 .l_042
+     506      506        0     1                 .l_04e
+     546      546        0     1                 .l_084
+     556      556        0     1                 .l_090
+     55e      55e        0     1                 .l_098
+     586      586        0     1                 .l_0ba
+     58e      58e        0     1                 .l_0c2
+     59a      59a        0     1                 .l_0ca
+     5c2      5c2        0     1                 .l_0e6
+     5d0      5d0        0     1                 .l_0f2
+     5e0      5e0        0     1                 .l_0fe
+     5ea      5ea        0     1                 .l_106
+     5ee      5ee        0     1                 .f_28890
+     604      604        0     1                 .al_012
+     608      608        0     1                 .al_016
+     618      618        0     1                 .al_024
+     624      624       10     4         C:/LAPIS/LEXIDE/BuildTools/Ver.20231124/Lib/U16/longu8.a(PUSHPOPU8LW.o):(.text)
+     624      624        0     1                 __regpushu8lw
+     62c      62c        0     1                 __regpopu8lw
 80009000 80009000        0     1 .bss
 80009000 80009000        0     1         __data_end = .
       7a       7a        0     1 .vec
@@ -186,9 +190,9 @@
 8000f000 8000f000        0     1 PROVIDE ( INITVARSEG = ( ( __START_DATA >> 16 ) & 15 ) )
        0        0       4a     1 .comment
        0        0       4a     1         <internal>:(.comment)
-       0        0      6e0     4 .symtab
-       0        0      6e0     4         <internal>:(.symtab)
+       0        0      710     4 .symtab
+       0        0      710     4         <internal>:(.symtab)
        0        0       48     1 .shstrtab
        0        0       48     1         <internal>:(.shstrtab)
-       0        0      3c4     1 .strtab
-       0        0      3c4     1         <internal>:(.strtab)
+       0        0      3e3     1 .strtab
+       0        0      3e3     1         <internal>:(.strtab)
