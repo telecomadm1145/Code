@@ -5,6 +5,10 @@
         .type    strcpy_nn,@function
         .globl   memcpy_nn
         .type    memcpy_nn,@function
+        .globl   memzero_n
+        .type    memzero_n,@function
+        .globl memset_n
+        .type memset_n,@function
     strcpy_nn:
         PUSH XR8
         PUSH BP
@@ -24,35 +28,71 @@
         RT
 
     memcpy_nn:
-        PUSH FP
-        MOV FP, SP
-        PUSH BP
-        PUSH ER8
-        PUSH ER4
-        MOV ER8, ER0
-        MOV ER4, ER0
-        MOV BP, ER2
-        BAL .l_024
-    .l_012:
-        MOV ER0, ER4
-        L R2, [BP]
-        ST R2, [ER4]
-        ADD ER0, #1
-        MOV ER4, ER0
-        ADD BP, #1
-        L ER0, +2[FP]
-        ADD ER0, #-1
-        ST ER0, +2[FP]
-    .l_024:
-        MOV ER0, #00
-        L ER2, +2[FP]
-        CMP ER0, ER2
-        BLT .l_012
-        MOV ER0, ER8
-        POP ER4
-        POP ER8
-        POP BP
-        MOV SP, FP
-        POP FP
-        RT
+        push er4
+        add sp,2
+        pop er4
+        add sp,-4
+        lea [er2]
+    .loop5:
+        l er2,[ea+]
+        st er2,[er0]
+        add er0, 2
+        add er4, -2
+        bne .loop5
+        
+        pop er4
+        rt
 
+    memzero_n:
+        push r4
+        mov r4,0
+        lea [er0]
+    .loop:
+        st r4,[ea+]
+        add er2,-1
+        bne .loop
+        
+        pop r4
+        rt
+
+    memzero_w_n:
+        push er4
+        mov er4, 0
+        lea [er0]
+        tb r0 1 ; 地址低位
+        beq .pass0
+        ; 不为0，对齐一下
+        st r4, [ea+]
+        add er2, -1
+    .pass0:
+        rb r2, 0 ; 字节数低位
+        beq .pass1
+        ; 不为0，记录一下
+        mov r5, 1
+        add er2, -1
+    .pass1:
+        mov er0, 0
+    .loop3:
+        st er0, [ea+]
+        add er2, -2
+        bnz .loop3
+        mov r5, r5
+        beq .exit
+        st r4, [ea+]
+    .exit:
+        pop er4
+        rt
+    
+    memset_n:
+        push er4 // er4 param3
+        add sp,2 // param3
+        pop er4 // ...
+        add sp,-4 // er4 param3 (restore stack)
+        lea [er0]
+    .loop2:
+        st r2,[ea+]
+        add er4,-1
+        bne .loop2
+
+        pop er4
+        rt

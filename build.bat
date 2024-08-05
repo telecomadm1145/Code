@@ -3,6 +3,7 @@
 SET PATH=C:\LAPIS\LEXIDE\Bin;C:\LAPIS\LEXIDE\BuildTools\Ver.20231124\Bin;C:\LAPIS\LEXIDE\Utilities\Bin;%PATH%
 
 clang-u16.exe -c test.cpp -O3 -v
+clang-u16.exe -c test.cpp -O3 -S
 clang-u16.exe -c classwiz_bsp.cpp -O3 -v
 llvm-mc-u16 startup.asm
 llvm-mc-u16 line_print.asm
