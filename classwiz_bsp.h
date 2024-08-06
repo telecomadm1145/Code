@@ -89,14 +89,15 @@
 #define KeyboardOutMask *((volatile __near byte *)0xF044)
 #define KeyboardOut *((volatile __near byte *)0xF046)
 
+#define Color *((__near byte*)0x9207)
 #define BufferSelect *((__near byte*)0x9208)
 
 inline void __near* GetScreenBuffer(){
     if (BufferSelect){
-        return (void __near*)0xd654;
+        return (void __near*)0xca54;
     }
     else{
-        return  (void __near*)0xca54;
+        return  (void __near*)0xd654;
     }
 }
 
@@ -108,5 +109,5 @@ struct kiko{
     byte ko;
 };
 kiko wait_kiko();
-void draw_glyph(ushort chr, byte x, byte y);
+void draw_glyph(byte x, byte y,byte chr);
 void line_print_n(const char __near *str, byte x, byte y);

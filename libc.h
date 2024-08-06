@@ -20,6 +20,11 @@ extern "C"
 template <typename X>
 ushort itoa_n(X value, char __near *ptr)
 {
+    if (value == 0){
+        ptr[0] = '0';
+        ptr[1] = 0;
+        return 1;
+    }
     bool isNegative = value < 0;
     if (isNegative)
     {
