@@ -97,3 +97,5 @@ struct kiko{
     byte ko;
 };
 kiko wait_kiko();
+void draw_glyph(ushort chr, byte x, byte y);
+void line_print_n(const char __near *str, byte x, byte y);

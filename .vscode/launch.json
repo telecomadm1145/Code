@@ -8,7 +8,8 @@
             "name": "Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/a.out",
+            "program": "${workspaceRoot}/launch.ps1",
+            "cwd": "${fileDirname}",
         }
     ]
 }

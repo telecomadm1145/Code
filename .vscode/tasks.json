@@ -3,7 +3,7 @@
         {
             "type": "cppbuild",
             "label": "C/C++: build target ROM",
-            "command": "build.bat",
+            "command": "build.ps1",
             "args": [
             ],
             "options": {
