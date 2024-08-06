@@ -89,6 +89,17 @@
 #define KeyboardOutMask *((volatile __near byte *)0xF044)
 #define KeyboardOut *((volatile __near byte *)0xF046)
 
+#define BufferSelect *((__near byte*)0x9208)
+
+inline void __near* GetScreenBuffer(){
+    if (BufferSelect){
+        return (void __near*)0xd654;
+    }
+    else{
+        return  (void __near*)0xca54;
+    }
+}
+
 void reset_timer();
 void delay(ushort after_ticks);
 void reset_sfrs();

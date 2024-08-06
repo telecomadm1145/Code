@@ -3,11 +3,12 @@
         {
             "type": "cppbuild",
             "label": "C/C++: build target ROM",
-            "command": "build.ps1",
+            "command": "powershell.exe",
             "args": [
+                "./build.ps1"
             ],
             "options": {
-                "cwd": "${fileDirname}"
+                "cwd": "${workspaceFolder}"
             },
             "problemMatcher": [
                 "$gcc"

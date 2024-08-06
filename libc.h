@@ -1,6 +1,7 @@
 #pragma once
 using byte = unsigned char;
 using ushort = unsigned short;
+using ulong = unsigned long;
 #ifdef __INTELLISENSE__
 #define __near
 #define __far
@@ -112,4 +113,8 @@ TNumber max(TNumber a, TNumber b)
 inline ushort byteswap_16(ushort x)
 {
     return (x >> 8) | (x << 8);
+}
+inline ulong byteswap_32(ulong x)
+{
+    return (x >> 24) | ((x >> 8) & 0xff) | ((x << 8) & 0xff) | (x << 24);
 }
