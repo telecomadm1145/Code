@@ -10,7 +10,7 @@ int main()
 		memzero_n(GetScreenBuffer(), 0x600 * 2);
 		line_print_n((const char __near *)"888888888888888", 0, 1);
 		line_print_n((const char __near *)"8.888888889\x90\x91\xa1\xa5", 30, 48);
-		// line_print_n((const char __near *)"Impact", 0, 32);
+		// line_print_n((const char __near *)"\xcc\xcc\xcc\xcc\xcc\xcc\xcc\xcc\xcc\xcc\xcc\xcc", 0, 32);
 		// line_print_n((const char __near *)"For Free", 0, 48);
 		render_copy();
 		ScreenSelect = 0;

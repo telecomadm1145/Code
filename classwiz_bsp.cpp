@@ -153,7 +153,7 @@ void draw_glyph(ushort chr, byte x, byte y)
 {
 	const auto width = 10;
 	const auto height = 13;
-	auto wi = width * chr;
+	auto wi = width * (byte)chr;
 	auto index2 = (wi >> 4);
 	auto n = wi & 15;
 	auto n2 = (16 - n);
@@ -165,8 +165,8 @@ void draw_glyph(ushort chr, byte x, byte y)
 	for (int j = 0; j < height; j++)
 	{
 		ushort dat = (((bs[index2]) << n) | ((bs[index2 + height]) >> n2)) & 0b1111111111000000;
-		ushort dat1 = (dat) >> ((x & 7) + 8);
-		ushort dat2 = (dat) >> ((x & 7));
+		byte dat1 = (dat) >> ((x & 7) + 8);
+		byte dat2 = (dat) >> ((x & 7));
 		buf[(j + 1 + y) * 24 + (x >> 3)] ^= dat1;
 		buf[(j + 1 + y) * 24 + (x >> 3) + 1] ^= dat2;
 		buf2[(j + 1 + y) * 24 + (x >> 3)] ^= dat1;
