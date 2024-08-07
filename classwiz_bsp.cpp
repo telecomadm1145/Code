@@ -26,6 +26,11 @@ extern "C"
 #pragma INTERRUPT a 46
 #pragma INTERRUPT a 48
 #pragma INTERRUPT a 50
+#pragma INTERRUPT a 52
+#pragma INTERRUPT a 54
+#pragma INTERRUPT a 56
+#pragma INTERRUPT a 58
+#pragma INTERRUPT a 60
 extern "C"
 {
 	static void a() {}
@@ -63,21 +68,48 @@ void reset_sfrs()
 	while (i--)
 	{
 	}
-	InterruptMask_W0 = 0x22;
-	InterruptMask_W1 = 0;
+	InterruptMask0 = 0x22;
+	InterruptMask1 = 0;
+	InterruptMask2 = 0;
+	val(0xf058) = 0;
+	KeyboardInMask = 0;
+	ExternalInterruptControl = 0;
 	ScreenPower = 7;
 	delay(200);
 	ScreenRange = 4;
-	ScreenBrightness = 3; // 7
+	ScreenBrightness = 7; // 7
 	ScreenInterval = 6;
 	ScreenUnk1 = 0x17;
 	ScreenUnk2 = 8;
 	ScreenOffset = 0;
-	ScreenMode = 0x55;
+	ScreenMode = 0x57;
 	ScreenContrast = 0x12;
-	ExternalInterruptControl = 0;
+	val(0xf220) = 0;
+	val(0xf221) = 0x7f;
+	val(0xf222) = 0;
+	val(0xf223) = 0x7f;
+	val(0xf224) = 0;
+	val(0xf225) = 0;
+	val(0xf048) = 0;
+	val(0xf049) = 0;
+	val(0xf04a) = 7;
+	val(0xf04b) = 0;
+	val(0xf04c) = 7;
+	val(0xf04e) = 0;
+	KeyboardInPullUp = 0;
+	KeyboardOut = 0;
+	KeyboardOutMask = 0;
 }
-
+void reset_screen_sfrs()
+{
+	ScreenRange = 4;
+	ScreenBrightness = 3;
+	ScreenInterval = 6;
+	ScreenUnk1 = 0x17;
+	ScreenUnk2 = 0x8;
+	ScreenOffset = 0;
+	ScreenMode = 0x55;
+}
 bool scan_key(kiko __near *er8)
 {
 	byte r1 = 0x01;
@@ -133,16 +165,36 @@ byte key_debounce(kiko __near *er8)
 kiko wait_kiko()
 {
 	kiko kv;
+	bool indicator = 1;
 redo:
+	ScreenSelect = 0;
+	val(0xF803) = 1;
+	ScreenSelect = 4;
+	val(0xF803) = 1;
 	KeyboardOut = 0xff;
 	KeyboardInMask = 0xff;
 	while (1)
 	{
+		ScreenSelect = 0;
+		val(0xF801) = indicator;
+		ScreenSelect = 4;
+		val(0xF801) = indicator;
+		indicator = !indicator;
 		delay(4000);
 		if (InterruptPending0 & 2)
 		{
-			if (scan_key((kiko __near *)&kv) && key_debounce((kiko __near *)&kv) && kv.ki != 0)
-				return kv;
+			if (scan_key((kiko __near *)&kv))
+			{
+				key_debounce((kiko __near *)&kv);
+				if (kv.ki != 0)
+				{
+					ScreenSelect = 0;
+					val(0xF803) = 1;
+					ScreenSelect = 4;
+					val(0xF803) = 1;
+					return kv;
+				}
+			}
 			goto redo;
 		}
 	}
@@ -190,4 +242,70 @@ void line_print_n(const char __near *str, byte x, byte y)
 		draw_glyph(x, y, c - 0x10);
 		x += 11;
 	}
+}
+void line_print_f(const char *str, byte x, byte y)
+{
+	while (1)
+	{
+		byte c = (byte) * (str++);
+		if (!c)
+			break;
+		draw_glyph(x, y, c - 0x10);
+		x += 11;
+	}
+}
+
+void rect_line(byte y, byte h)
+{
+	auto buf = (byte __near *)GetScreenBuffer();
+	auto buf2 = (byte __near *)GetScreenBuffer() + 0x600;
+	for (byte i = y; i < y + h; i++)
+	{
+		for (byte j = 0; j < 23; j++)
+		{
+			buf[i * 24 + j] ^= 0xff;
+			buf2[i * 24 + j] ^= 0xff;
+		}
+	}
+}
+void rect(byte x, byte y, byte w, byte h) {
+    // Get the base address of the screen buffer
+    byte __near *buf1 = (byte __near *)GetScreenBuffer();
+    byte __near *buf2 = buf1 + 0x600; // Assuming buf2 is for the second bit plane
+
+    // Precompute the bit position and mask within the byte
+    byte startBit = x % 8;
+    byte endBit = (x + w) % 8;
+    byte startMask = 0xFF >> startBit;
+    byte endMask = 0xFF << (8 - endBit);
+    byte fullByteCount = (x + w + 7) / 8 - (x / 8) - (startBit != 0);
+
+    // Fill the rectangle in both bit planes
+    for (byte i = 0; i < h; ++i) {
+        // Calculate the starting address of the row in both bit planes
+        byte __near *rowStart1 = buf1 + ((y + i) * 24) + (x / 8);
+        byte __near *rowStart2 = buf2 + ((y + i) * 24) + (x / 8);
+
+        if (fullByteCount == 0) {
+            // Case where the rectangle fits within a single byte
+            rowStart1[0] |= (startMask & endMask);
+            rowStart2[0] |= (startMask & endMask);
+        } else {
+            // Case where the rectangle spans multiple bytes
+            if (startBit != 0) {
+                rowStart1[0] |= startMask;
+                rowStart2[0] |= startMask;
+                rowStart1++;
+                rowStart2++;
+            }
+            for (byte j = 0; j < fullByteCount; ++j) {
+                rowStart1[j] = 0xFF;
+                rowStart2[j] = 0xFF;
+            }
+            if (endBit != 0) {
+                rowStart1[fullByteCount] |= endMask;
+                rowStart2[fullByteCount] |= endMask;
+            }
+        }
+    }
 }

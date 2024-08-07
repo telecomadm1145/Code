@@ -16,6 +16,7 @@ extern "C"
     void memzero_w_n(void __near *, ushort);
     void memset_n(void __near *, byte, ushort);
     void DebugOutputString(const char *);
+    
 }
 template <typename X>
 ushort itoa_n(X value, char __near *ptr)

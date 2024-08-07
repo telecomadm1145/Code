@@ -14,8 +14,7 @@ render_copy:
     mov r0, #0x00
     st r0, -3[fp]
     st r0, 0x91fc
-    l r0, 0x9208
-    beq .l_01c
+    bal .l_01c
 .l_018:
     b __regpopu8lw
 .l_01c:

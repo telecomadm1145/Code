@@ -1,3 +1,4 @@
+#pragma once
 #include "libc.h"
 #define val(x) *((volatile __near byte *)x)
 // STPACP
@@ -24,6 +25,8 @@
 // OSCLK is the clock divider.
 // Only when LSCLK = 1, low speed clock is enabled.
 #define FCON *((volatile __near byte *)0xF00A)
+#define LowSpeedTimerBasedCounter *((volatile __near byte *)0xF00C)
+#define HighSpeedTimerBasedCounter *((volatile __near byte *)0xF00D)
 #define InterruptMask0 *((volatile __near byte *)0xF010)
 #define InterruptMask1 *((volatile __near byte *)0xF011)
 #define InterruptMask_W0 *((volatile __near ushort *)0xF010)
@@ -89,25 +92,35 @@
 #define KeyboardOutMask *((volatile __near byte *)0xF044)
 #define KeyboardOut *((volatile __near byte *)0xF046)
 
-#define Color *((__near byte*)0x9207)
-#define BufferSelect *((__near byte*)0x9208)
+#define Color *((__near byte *)0x9207)
+#define BufferSelect *((__near byte *)0x9208)
 
-inline void __near* GetScreenBuffer(){
-    if (BufferSelect){
-        return (void __near*)0xca54;
+inline void __near *GetScreenBuffer()
+{
+    return (void __near *)0xca54;
+    /*if (BufferSelect)
+    {
+        return (void __near *)0xd654;
     }
-    else{
-        return  (void __near*)0xd654;
-    }
+    else
+    {
+        return (void __near *)0xca54;
+    }*/
 }
 
 void reset_timer();
 void delay(ushort after_ticks);
 void reset_sfrs();
-struct kiko{
+void reset_screen_sfrs();
+struct kiko
+{
     byte ki;
     byte ko;
 };
 kiko wait_kiko();
-void draw_glyph(byte x, byte y,byte chr);
+void draw_glyph(byte x, byte y, byte chr);
 void line_print_n(const char __near *str, byte x, byte y);
+void line_print_f(const char *str, byte x, byte y);
+extern "C" void render_copy(byte select = 0);
+void rect_line(byte y, byte h);
+void rect(byte x, byte y, byte w, byte h);
