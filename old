@@ -1,0 +1,186 @@
+    #if 0
+    void strcpy_nn(void __near *, void __near *);
+    ushort strlen_n(void __near*);
+    void memcpy_nn(void __near *, void __near *, ushort);
+    void memmove_nn(void __near *, void __near *, ushort);
+    void memzero_n(void __near *, ushort);
+    void memzero_w_n(void __near *, ushort);
+    void memset_n(void __near *, byte, ushort);
+    void printf(const char*,...);
+    byte get_msb(byte);
+
+
+    
+    strcpy_nn:
+        lea [er0]
+    .loop9:
+        l r0,[ea+]
+        beq .exit9
+        st r0,[er2]
+        add er2,1
+        bal .loop9
+    .exit9:
+        rt
+
+    memcpy_nn:
+        push er4
+        add sp,2
+        pop er4
+        add sp,-4
+        lea [er2]
+    .loop5:
+        l er2,[ea+]
+        st er2,[er0]
+        add er0, 2
+        add er4, -2
+        bne .loop5
+        
+        pop er4
+        rt
+    
+    memmove_nn:
+        push er4
+        add sp,2
+        pop er4
+        add sp,-4
+        mov er4,er4
+        beq .ret99
+        lea [er2]
+    .loop99:
+        l r2,[ea+]
+        st r2,[er0]
+        add er0, 1
+        add er4, -1
+        bne .loop99
+    .ret99:
+        pop er4
+        rt
+
+
+    memzero_n:
+        push r4
+        mov r4,0
+        lea [er0]
+    .loop:
+        st r4,[ea+]
+        add er2,-1
+        bne .loop
+        
+        pop r4
+        rt
+
+    memzero_w_n:
+        push er4
+        mov er4, 0
+        lea [er0]
+        tb r0 1 ; 地址低位
+        beq .pass0
+        ; 不为0，对齐一下
+        st r4, [ea+]
+        add er2, -1
+    .pass0:
+        rb r2, 0 ; 字节数低位
+        beq .pass1
+        ; 不为0，记录一下
+        mov r5, 1
+        add er2, -1
+    .pass1:
+        mov er0, 0
+    .loop3:
+        st er0, [ea+]
+        add er2, -2
+        bnz .loop3
+        mov r5, r5
+        beq .exit
+        st r4, [ea+]
+    .exit:
+        pop er4
+        rt
+    
+    memset_n:
+        push er4 // er4 param3
+        add sp,2 // param3
+        pop er4 // ...
+        add sp,-4 // er4 param3 (restore stack)
+        lea [er0]
+    .loop2:
+        st r2,[ea+]
+        add er4,-1
+        bne .loop2
+
+        pop er4
+        rt
+    
+        strlen_n:
+        lea [er0]
+        mov er0,0
+    .loop14:
+        add er0,1
+        l r2,[ea+]
+        bne .loop14
+        add er0,-1
+        rt
+
+            printf:
+        l r0,6:0x0722
+        rt
+
+                .globl printf
+        .type printf,@function
+
+                .globl   strcpy_nn
+        .type    strcpy_nn,@function
+        .globl   memcpy_nn
+        .type    memcpy_nn,@function
+        .globl   memmove_nn
+        .type    memmove_nn,@function
+        .globl memset_n
+        .type memset_n,@function
+        .globl strlen_n
+        .type strlen_n,@function
+    #endif
+
+    /*
+	auto v = cosf(3.14159f);
+	auto s = LR"a(
+私のオナニーを
+みてください
+)a";
+	int x = 0;
+	int y = 1;
+	const wchar_t __near *d = (const wchar_t __near *)s;
+	while (1)
+	{
+		while (*d != 0 && !(y > 64))
+		{
+			if (x + 16 > 192)
+			{
+				x = 0;
+				y += 16;
+			}
+			if (*d == '\n' || *d == '\r')
+			{
+				if (x != 0)
+				{
+					x = 0;
+					y += 16;
+				}
+				d++;
+				continue;
+			}
+			if (DrawGlyph2(x, y, *d))
+			{
+				x += 8;
+			}
+			else
+			{
+				x += 16;
+			}
+			d++;
+		}
+		x = 0;
+		y = 1;
+		wait_kiko();
+		render_copy();
+	}
+*/

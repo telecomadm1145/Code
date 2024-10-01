@@ -12,7 +12,6 @@ ushort show_menu(const MenuItem *pmenuitems, byte count)
 {
     byte ind = 0;
     byte start = 0;
-    Color = 3;
     while (1)
     {
         memzero_n((void __near *)GetScreenBuffer(), 0x600 * 2);
@@ -26,11 +25,24 @@ ushort show_menu(const MenuItem *pmenuitems, byte count)
             if (j > count)
                 break;
             auto y = i * 16 + 1;
-            draw_glyph(1, y, i + 0x21);
-            draw_glyph(10, y, ':' - 0x10);
-            line_print_f(pmenuitems[j].string, 25, y);
+            Color = 3;
+            if (pmenuitems[j].op != 0)
+            {
+                draw_glyph(1, y, i + 0x21);
+                draw_glyph(7, y, ':' - 0x10);
+                line_print_f(pmenuitems[j].string, 20, y);
+            }
+            else
+            {
+                line_print_f(pmenuitems[j].string, 0, y);
+            }
+
             if (ind == j)
+            {
+                if (pmenuitems[j].op == 0)
+                    Color = 1;
                 rect_line(y, 15);
+            }
         }
         render_copy();
         auto kv = wait_kiko();
@@ -51,8 +63,9 @@ ushort show_menu(const MenuItem *pmenuitems, byte count)
             break; // 右
         case 0x0840:
         case 0x4001:
-            return pmenuitems[ind].op;
-            // break; // Exe
+            if (pmenuitems[ind].op != 0)
+                return pmenuitems[ind].op;
+            break; // Exe
         case 0x2080:
             if (ind > 3)
                 ind -= 4;
@@ -69,19 +82,19 @@ ushort show_menu(const MenuItem *pmenuitems, byte count)
                 ind = count;
             break; // PgDn
         case 257:  // 1
-            if (start <= count)
+            if (start <= count && pmenuitems[start].op != 0)
                 return pmenuitems[start].op;
             break;
         case 513: // 2
-            if (start + 1 <= count)
+            if (start + 1 <= count && pmenuitems[start + 1].op != 0)
                 return pmenuitems[start + 1].op;
             break;
         case 1025: // 3
-            if (start + 2 <= count)
+            if (start + 2 <= count && pmenuitems[start + 2].op != 0)
                 return pmenuitems[start + 2].op;
             break;
         case 258: // 4
-            if (start + 3 <= count)
+            if (start + 3 <= count && pmenuitems[start + 3].op != 0)
                 return pmenuitems[start + 3].op;
             break;
         }

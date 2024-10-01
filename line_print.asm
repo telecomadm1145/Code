@@ -27,7 +27,7 @@ render_copy:
     bal .l_030
 .l_02c:
     mov r10, #0x54
-    mov r11, #0xca
+    mov r11, #0xd6
 .l_030:
     mov r0, #0x00
     mov r1, #0xf8

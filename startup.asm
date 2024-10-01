@@ -21,7 +21,7 @@
 
         .short  _$$brk_reset       ;; dw brk_reset    @ 0:4h
 
-        .short      0xffff
+        .short   _$$brk_reset
 
 
 
@@ -38,34 +38,3 @@ _$$bal_00:
 
 _$begin:
         b       main
-;---------------------------------------------------------------
-;       segment definition for data variable initialization
-;---------------------------------------------------------------
-;$$init_info segment table 2
-
-        .type    _$$init_info,@object
-        .section .rodata,"a",@progbits
-        .globl   _$$init_info
-_$$init_info:
-
-        .short  INITTAB;; ROM Data(address); dw  $$NINITTAB
-        .short  INITVAR;; RAM Data(address); dw  $$NINITVAR
-        .short  INITSIZE;; RAM Data(address); dw size $$NINITVAR
-        .byte   INITTABSEG;; ROM Data(SEG); db  seg $$NINITTAB
-        .byte   INITVARSEG;; RAM Data(SEG); db  seg $$NINITVAR
-
-;$$init_info_end segment table
-
-        .type    _$$init_info_end,@object
-        .section .rodata,"a",@progbits
-        .globl   _$$init_info_end
-_$$init_info_end:
-
-        .short      0xffff
-
-;$$NINITVAR segment data 2 #0
-;$$NINITTAB segment table 2
-
-
-        .end
-

@@ -82,7 +82,7 @@ void reset_sfrs()
 	ScreenUnk1 = 0x17;
 	ScreenUnk2 = 8;
 	ScreenOffset = 0;
-	ScreenMode = 0x57;
+	ScreenMode = 0x17;
 	ScreenContrast = 0x12;
 	val(0xf220) = 0;
 	val(0xf221) = 0x7f;
@@ -108,7 +108,7 @@ void reset_screen_sfrs()
 	ScreenUnk1 = 0x17;
 	ScreenUnk2 = 0x8;
 	ScreenOffset = 0;
-	ScreenMode = 0x55;
+	ScreenMode = 0x15;
 }
 bool scan_key(kiko __near *er8)
 {
@@ -119,6 +119,7 @@ bool scan_key(kiko __near *er8)
 	while (r3 <= 0x07)
 	{
 		KeyboardOut = r1;
+		delay(1);
 		r2 = KeyboardIn;
 
 		if (r2 == 0xFF)
@@ -241,6 +242,11 @@ void line_print_n(const char __near *str, byte x, byte y)
 			break;
 		draw_glyph(x, y, c - 0x10);
 		x += 11;
+		if (x > 180)
+		{
+			x = 0;
+			y += 16;
+		}
 	}
 }
 void line_print_f(const char *str, byte x, byte y)
@@ -263,49 +269,221 @@ void rect_line(byte y, byte h)
 	{
 		for (byte j = 0; j < 23; j++)
 		{
-			buf[i * 24 + j] ^= 0xff;
-			buf2[i * 24 + j] ^= 0xff;
+			if (Color & 0b1)
+				buf[i * 24 + j] ^= 0xff;
+			if (Color & 0b10)
+				buf2[i * 24 + j] ^= 0xff;
 		}
 	}
 }
-void rect(byte x, byte y, byte w, byte h) {
-    // Get the base address of the screen buffer
-    byte __near *buf1 = (byte __near *)GetScreenBuffer();
-    byte __near *buf2 = buf1 + 0x600; // Assuming buf2 is for the second bit plane
+void rect(byte x, byte y, byte w, byte h)
+{
+	// Get the base address of the screen buffer
+	byte __near *buf1 = (byte __near *)GetScreenBuffer();
+	byte __near *buf2 = buf1 + 0x600; // Assuming buf2 is for the second bit plane
 
-    // Precompute the bit position and mask within the byte
-    byte startBit = x % 8;
-    byte endBit = (x + w) % 8;
-    byte startMask = 0xFF >> startBit;
-    byte endMask = 0xFF << (8 - endBit);
-    byte fullByteCount = (x + w + 7) / 8 - (x / 8) - (startBit != 0);
+	// Precompute the bit position and mask within the byte
+	byte startBit = x % 8;
+	byte endBit = (x + w) % 8;
+	byte startMask = 0xFF >> startBit;
+	byte endMask = 0xFF << (8 - endBit);
+	byte fullByteCount = (x + w + 7) / 8 - (x / 8) - (startBit != 0);
 
-    // Fill the rectangle in both bit planes
-    for (byte i = 0; i < h; ++i) {
-        // Calculate the starting address of the row in both bit planes
-        byte __near *rowStart1 = buf1 + ((y + i) * 24) + (x / 8);
-        byte __near *rowStart2 = buf2 + ((y + i) * 24) + (x / 8);
+	// Fill the rectangle in both bit planes
+	for (byte i = 0; i < h; ++i)
+	{
+		// Calculate the starting address of the row in both bit planes
+		byte __near *rowStart1 = buf1 + ((y + i) * 24) + (x / 8);
+		byte __near *rowStart2 = buf2 + ((y + i) * 24) + (x / 8);
 
-        if (fullByteCount == 0) {
-            // Case where the rectangle fits within a single byte
-            rowStart1[0] |= (startMask & endMask);
-            rowStart2[0] |= (startMask & endMask);
-        } else {
-            // Case where the rectangle spans multiple bytes
-            if (startBit != 0) {
-                rowStart1[0] |= startMask;
-                rowStart2[0] |= startMask;
-                rowStart1++;
-                rowStart2++;
-            }
-            for (byte j = 0; j < fullByteCount; ++j) {
-                rowStart1[j] = 0xFF;
-                rowStart2[j] = 0xFF;
-            }
-            if (endBit != 0) {
-                rowStart1[fullByteCount] |= endMask;
-                rowStart2[fullByteCount] |= endMask;
-            }
-        }
-    }
+		if (fullByteCount == 0)
+		{
+			// Case where the rectangle fits within a single byte
+			rowStart1[0] |= (startMask & endMask);
+			rowStart2[0] |= (startMask & endMask);
+		}
+		else
+		{
+			// Case where the rectangle spans multiple bytes
+			if (startBit != 0)
+			{
+				rowStart1[0] |= startMask;
+				rowStart2[0] |= startMask;
+				rowStart1++;
+				rowStart2++;
+			}
+			for (byte j = 0; j < fullByteCount; ++j)
+			{
+				rowStart1[j] = 0xFF;
+				rowStart2[j] = 0xFF;
+			}
+			if (endBit != 0)
+			{
+				rowStart1[fullByteCount] |= endMask;
+				rowStart2[fullByteCount] |= endMask;
+			}
+		}
+	}
+}
+enum KeyCode_2 : ushort
+{
+	Up = 0xFC00,
+	Down,
+	Left,
+	Right,
+	Stdn,
+	Ok,
+	PgUp,
+	PgDn,
+	Shift,
+	Set,
+	Home,
+	Back,
+	Var,
+	Func,
+	Ctlg,
+	Tools,
+	Delete,
+	AC,
+};
+// 竖向: KO 横向: KI
+const ushort keymap[]{
+	0x0031,
+	0x0034,
+	0x0037,
+	0x0000,
+	0x0000,
+	Shift,
+	Set,
+	0x0000,
+	0x0032,
+	0x0035,
+	0x0038,
+	0x0000,
+	0x0000,
+	Var,
+	Back,
+	Home,
+	0x0033,
+	0x0036,
+	0x0039,
+	0x0000,
+	0x0000,
+	Func,
+	Left,
+	0x0000,
+	0x002B,
+	0x0024,
+	Delete,
+	0x0000,
+	0x0000,
+	Down,
+	Ok,
+	Up,
+	0x002D,
+	0x0026,
+	AC,
+	0x0000,
+	0x0000,
+	Ctlg,
+	Right,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	Tools,
+	PgDn,
+	PgUp,
+	Ok,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0030,
+	0x0000,
+	0x0000,
+	0x0000,
+};
+const ushort keymap_shift[]{
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	Shift,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	Left,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	Down,
+	Ok,
+	Up,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	Right,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	PgDn,
+	PgUp,
+	Ok,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+	0x0000,
+};
+byte key_mod = 0;
+KeyCode getkeycode()
+{
+	auto kv = wait_kiko();
+	auto km = keymap;
+	if (key_mod == 1)
+	{
+		km = keymap_shift;
+	}
+	auto s = km[(get_msb(kv.ko) << 3) + get_msb(kv.ki)];
+	if (s == Shift)
+	{
+		if (key_mod)
+		{
+			key_mod = 0;
+		}
+		else
+		{
+			key_mod = 1;
+		}
+		s = 0;
+	}
+	return (KeyCode)s;
 }

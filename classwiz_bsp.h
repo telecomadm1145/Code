@@ -97,15 +97,7 @@
 
 inline void __near *GetScreenBuffer()
 {
-    return (void __near *)0xca54;
-    /*if (BufferSelect)
-    {
-        return (void __near *)0xd654;
-    }
-    else
-    {
-        return (void __near *)0xca54;
-    }*/
+    return (void __near *)0xd654;
 }
 
 void reset_timer();
@@ -124,3 +116,24 @@ void line_print_f(const char *str, byte x, byte y);
 extern "C" void render_copy(byte select = 0);
 void rect_line(byte y, byte h);
 void rect(byte x, byte y, byte w, byte h);
+enum class KeyCode : ushort {
+    Up = 0xFC00,
+    Down,
+    Left,
+    Right,
+    Shutdown,
+    Ok,
+    PageUp,
+    PageDown,
+    Shift,
+    Settings,
+    Home,
+    Back,
+    Variable,
+    Function,
+    Catalog,
+    Tools,
+    Delete,
+    AC,
+};
+KeyCode getkeycode();

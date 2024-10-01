@@ -9,23 +9,26 @@ public:
     const char *string;
 };
 
-
 const MenuItem test_menu[] = {
-    {0, "MenuItem1"},
-    {1, "MenuItem2"},
-    {2, "MenuItem3"},
-    {3, "MenuItem4"},
-    {4, "MenuItem5"},
-    {5, "MenuItem6"},
-    {6, "MenuItem7"},
-    {7, "MenuItem8"},
-    {8, "MenuItem9"},
-    {9, "MenuItem10"},
-    {10, "MenuItem11"},
-    {11, "MenuItem12"},
-    {12, "MenuItem13"},
-    {13, "MenuItem14"},
+    {0, "Get 180 free"},
+    {0, "pulls On"},
+    {0, "Genshit(TM)"},
+    {1, "Yes1"},
+    {2, "Yes2"},
+    {3, "Yes3"},
+    {4, "Yes4"},
+    {5, "Yes5"},
+    {6, "Yes6"},
+    {7, "Yes7"},
+    {8, "Yes8"},
+    {9, "Yes9"},
+    {10, "Yes10"},
+    {11, "Yes11"},
 };
 
-
 ushort show_menu(const MenuItem *pmenuitems, byte count);
+template <byte N>
+ushort show_menu(const MenuItem (&pmenuitems)[N])
+{
+    return show_menu(pmenuitems, static_cast<byte>(N - 1));
+}

@@ -3,6 +3,8 @@
         "type_traits": "cpp",
         "xtr1common": "cpp",
         "xutility": "cpp",
-        "cstddef": "cpp"
+        "cstddef": "cpp",
+        "sstream": "cpp",
+        "cmath": "cpp"
     }
 }
