@@ -92,6 +92,26 @@
 #define KeyboardOutMask *((volatile __near byte *)0xF044)
 #define KeyboardOut *((volatile __near byte *)0xF046)
 
+
+// Port 1 (or Port 2 maybe?)
+#define P1D  *((volatile __near byte *)0xF220)
+#define P1DIR  *((volatile __near byte *)0xF221)
+#define P1CON0 *((volatile __near byte *)0xF222)
+#define P1CON1 *((volatile __near byte *)0xF223)
+#define P1MOD0 *((volatile __near byte *)0xF224)
+// Only exists on Classwiz II
+#define P1MOD1 *((volatile __near byte *)0xF225)
+
+// SIO/SPI related SFRs
+#define SIO0BUFL *((volatile __near byte *)0xF280)
+#define SIO0BUFH *((volatile __near byte *)0xF281)
+#define SIO0BUF *((volatile __near unsigned short *)0xF280)
+#define SIO0CON *((volatile __near byte *)0xF282)
+#define SIO0MOD0 *((volatile __near byte *)0xF284)
+#define SIO0MOD1 *((volatile __near byte *)0xF285)
+#define SIO0MOD *((volatile __near unsigned short *)0xF284)
+
+
 #define Color *((__near byte *)0x9207)
 #define BufferSelect *((__near byte *)0x9208)
 
@@ -116,7 +136,8 @@ void line_print_f(const char *str, byte x, byte y);
 extern "C" void render_copy(byte select = 0);
 void rect_line(byte y, byte h);
 void rect(byte x, byte y, byte w, byte h);
-enum class KeyCode : ushort {
+enum class KeyCode : ushort
+{
     Up = 0xFC00,
     Down,
     Left,

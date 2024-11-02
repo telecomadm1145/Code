@@ -7,7 +7,9 @@ $cFiles = Get-ChildItem -Recurse -Filter *.c | ForEach-Object { $_.FullName }
 $cppFiles = Get-ChildItem -Recurse -Filter *.cpp | ForEach-Object { $_.FullName }
 $asmFiles = Get-ChildItem -Recurse -Filter *.asm | ForEach-Object { $_.FullName }
 
-& clang-u16.exe -c ($cFiles + $cppFiles) -O3 -v
+& clang-u16.exe -c ($cFiles + $cppFiles) -v -I. -Ilibc
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+& clang-u16.exe -c ($cFiles + $cppFiles) -S -v  -I. -Ilibc
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 # 编译 ASM 文件

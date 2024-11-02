@@ -7,4 +7,6 @@
 #define __unpacked
 #define __ConstNF
 #define _NSETJMP 1
+#define __FAR__
+#define __attribute__(x)
 #endif

@@ -119,7 +119,6 @@ bool scan_key(kiko __near *er8)
 	while (r3 <= 0x07)
 	{
 		KeyboardOut = r1;
-		delay(1);
 		r2 = KeyboardIn;
 
 		if (r2 == 0xFF)
@@ -166,33 +165,24 @@ byte key_debounce(kiko __near *er8)
 kiko wait_kiko()
 {
 	kiko kv;
-	bool indicator = 1;
 redo:
-	ScreenSelect = 0;
-	val(0xF803) = 1;
-	ScreenSelect = 4;
-	val(0xF803) = 1;
 	KeyboardOut = 0xff;
 	KeyboardInMask = 0xff;
 	while (1)
 	{
-		ScreenSelect = 0;
-		val(0xF801) = indicator;
-		ScreenSelect = 4;
-		val(0xF801) = indicator;
-		indicator = !indicator;
 		delay(4000);
 		if (InterruptPending0 & 2)
 		{
+			KeyboardOut = 0;
+			KeyboardInMask = 0;
+			volatile byte i = 40;
+			while(i--) __asm("nop");
+
 			if (scan_key((kiko __near *)&kv))
 			{
 				key_debounce((kiko __near *)&kv);
 				if (kv.ki != 0)
 				{
-					ScreenSelect = 0;
-					val(0xF803) = 1;
-					ScreenSelect = 4;
-					val(0xF803) = 1;
 					return kv;
 				}
 			}

@@ -24,7 +24,6 @@
 #define strcspn(s1, s2) strcspn_nn(s1, s2)
 // #define	strlen(s)	strlen_n(s)
 #define strncat(s1, s2, n) strncat_nn(s1, s2, n)
-#define strncmp(s1, s2, n) strncmp_nn(s1, s2, n)
 #define strncpy(s1, s2, n) strncpy_nn(s1, s2, n)
 #define strpbrk(s1, s2) strpbrk_nn(s1, s2)
 #define strrchr(s, c) strrchr_n(s, c)
@@ -41,12 +40,10 @@
 #define memset(s, c, n) memset_f(s, c, n)
 #define strcat(s1, s2) strcat_ff(s1, s2)
 #define strchr(s, c) strchr_f(s, c)
-#define strcmp(s1, s2) strcmp_ff(s1, s2)
 #define strcpy(s1, s2) strcpy_ff(s1, s2)
 #define strcspn(s1, s2) strcspn_ff(s1, s2)
 // #define	strlen(s)	strlen_f(s)
 #define strncat(s1, s2, n) strncat_ff(s1, s2, n)
-#define strncmp(s1, s2, n) strncmp_ff(s1, s2, n)
 #define strncpy(s1, s2, n) strncpy_ff(s1, s2, n)
 #define strpbrk(s1, s2) strpbrk_ff(s1, s2)
 #define strrchr(s, c) strrchr_f(s, c)
@@ -74,7 +71,7 @@ extern "C"
 #ifndef __NOFAR__
 	void __near *memcpy_nf(void __near *, const void __far *, size_t);
 	void __far *memcpy_fn(void __far *, const void __near *, size_t);
-	void __far *memcpy_ff(void __far *, const void __far *, size_t);
+	void *memcpy_ff(void *, const void *, size_t);
 #endif
 
 	void *memmove(void *, const void *, size_t);
@@ -96,12 +93,7 @@ extern "C"
 	char __far *strchr_f(const char __far *, int);
 #endif
 
-	int strcmp_nn(const char __near *, const char __near *);
-#ifndef __NOFAR__
-	int strcmp_nf(const char __near *, const char __far *);
-	int strcmp_fn(const char __far *, const char __near *);
-	int strcmp_ff(const char __far *, const char __far *);
-#endif
+	int strcmp(const char *, const char *);
 
 	char __near *strcpy_nn(char __near *, const char __near *);
 #ifndef __NOFAR__
@@ -126,12 +118,7 @@ extern "C"
 	char __far *strncat_ff(char __far *, const char __far *, size_t);
 #endif
 
-	int strncmp_nn(const char __near *, const char __near *, size_t);
-#ifndef __NOFAR__
-	int strncmp_nf(const char __near *, const char __far *, size_t);
-	int strncmp_fn(const char __far *, const char __near *, size_t);
-	int strncmp_ff(const char __far *, const char __far *, size_t);
-#endif
+	int strncmp(const char *, const char *, size_t);
 
 	char __near *strncpy_nn(char __near *, const char __near *, size_t);
 #ifndef __NOFAR__

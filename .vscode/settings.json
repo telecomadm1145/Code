@@ -5,6 +5,7 @@
         "xutility": "cpp",
         "cstddef": "cpp",
         "sstream": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "locale": "cpp"
     }
 }
